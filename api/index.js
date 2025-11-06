@@ -1,13 +1,15 @@
+import serverless from "serverless-http";
+
 
 import dotenv from "dotenv";
 dotenv.config({
     path: './.env'
 })
 import mongoose from 'mongoose'
-import { app } from './app.js';
+import { app } from '../src/app.js';
 import express from 'express'
-import { DB_NAME } from './constants.js';
-import connectDB from './db/dbConfig.js';
+import { DB_NAME } from '../src/constants.js';
+import connectDB from '../src/db/dbConfig.js';
 import {v2 as cloudinary} from 'cloudinary'
 
 
@@ -24,15 +26,16 @@ cloudinary.config({
 
 connectDB()
 .then(()=>{
-    app.listen(PORT, ()=>{
-        console.log(`Server listening at http://localhost:${PORT}`)
-    })
+    // app.listen(PORT, ()=>{
+    //     console.log(`Server listening at http://localhost:${PORT}`)
+    // })
+    console.log("Server working")
 })
 .catch((error)=> {
     console.log("ERROR: ", error)
 })
 
-
+export const handler = serverless(app);
 
 
 
