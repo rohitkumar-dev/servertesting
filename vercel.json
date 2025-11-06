@@ -1,10 +1,9 @@
 {
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "vercel-nodejs@20"
-    }
-  },
+  "version": 2,
   "rewrites": [
-    { "source": "/", "destination": "/api" }
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.js"
+    }
   ]
 }
