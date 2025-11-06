@@ -34,49 +34,82 @@
 
 
 
-import serverless from "serverless-http";
+// import serverless from "serverless-http";
+// import dotenv from "dotenv";
+// import mongoose from "mongoose";
+// import { v2 as cloudinary } from "cloudinary";
+// import { app } from "../src/app.js";
+// import connectDB from "../src/db/dbConfig.js";
+
+// // Load environment variables
+// dotenv.config({ path: "./.env" });
+
+// // Cloudinary config
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
+
+// // Ensure MongoDB connects once per container
+// let isConnected = false;
+
+// async function ensureDBConnection() {
+//   if (isConnected && mongoose.connection.readyState === 1) return;
+
+//   try {
+//     const conn = await connectDB();
+//     if (conn && conn.connection.readyState === 1) {
+//       isConnected = true;
+//       console.log("✅ MongoDB connected (serverless)");
+//     }
+//   } catch (err) {
+//     console.error("❌ MongoDB connection failed:", err.message);
+//   }
+// }
+
+// // Wrap the Express app with serverless
+// const serverlessHandler = serverless(app);
+
+// // Main exported handler for Vercel
+// export async function handler(event, context) {
+//   await ensureDBConnection();
+//   return serverlessHandler(event, context);
+// }
+
+
+
+
+
+
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
-import { app } from "../src/app.js";
+import { app } from "../src/app.js"; // Import the Express app
 import connectDB from "../src/db/dbConfig.js";
 
-// Load environment variables
+// Load environment variables (Vercel loads these automatically, but harmless to keep)
 dotenv.config({ path: "./.env" });
 
-// Cloudinary config
+// Cloudinary config (runs once during cold start)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Ensure MongoDB connects once per container
-let isConnected = false;
-
-async function ensureDBConnection() {
-  if (isConnected && mongoose.connection.readyState === 1) return;
-
-  try {
-    const conn = await connectDB();
-    if (conn && conn.connection.readyState === 1) {
-      isConnected = true;
-      console.log("✅ MongoDB connected (serverless)");
-    }
-  } catch (err) {
-    console.error("❌ MongoDB connection failed:", err.message);
-  }
-}
-
-// Wrap the Express app with serverless
-const serverlessHandler = serverless(app);
-
-// Main exported handler for Vercel
-export async function handler(event, context) {
-  await ensureDBConnection();
-  return serverlessHandler(event, context);
-}
-
+// --- Database Initialization ---
+// Vercel Serverless Function instances persist between requests.
+// We call connectDB() directly during the cold start.
+connectDB()
+    .then(() => {
+        console.log("✅ MongoDB connected successfully during Serverless cold start.");
+    })
+    .catch((err) => {
+        console.error("❌ MongoDB connection failed during cold start:", err.message);
+        // Important: If connection fails, the function may still crash.
+        // Ensure environment variables are set on Vercel!
+    });
 
 
 
