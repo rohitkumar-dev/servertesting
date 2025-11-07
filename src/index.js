@@ -34,6 +34,13 @@ cloudinary.config({
 //     console.log("ERROR: ", error)
 // })
 
+app.get("/", (req, res) => {
+  res.send("Server Running");
+});
+app.get("/test", (req, res) => {
+  res.send("Server Running");
+});
+
 export default app
 
 
