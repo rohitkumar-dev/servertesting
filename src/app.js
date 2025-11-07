@@ -19,6 +19,9 @@ app.use(cookieParser())
 app.get("/", (req, res) => {
   res.send("Server Running");
 });
+app.get("/test", (req, res) => {
+  res.send("Server Running");
+});
 
 // routess
 app.use("/api/v1/users", userRouter)
