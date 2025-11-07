@@ -4,7 +4,7 @@ dotenv.config({
     path: './.env'
 })
 import mongoose from 'mongoose'
-import { app } from './app.js';
+import app from './app.js';
 import express from 'express'
 import { DB_NAME } from './constants.js';
 import connectDB from './db/dbConfig.js';
@@ -34,12 +34,7 @@ cloudinary.config({
 //     console.log("ERROR: ", error)
 // })
 
-app.get("/", (req, res) => {
-  res.send("Server Running");
-});
-app.get("/test", (req, res) => {
-  res.send("Server Running");
-});
+
 
 export default app
 
